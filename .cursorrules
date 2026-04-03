@@ -1,0 +1,35 @@
+# 🎯 REGLAS MAESTRAS DE ARQUITECTURA Y CLEAN CODE (v2026)
+
+## 📂 Estructura, Directorios y Rutas
+- **Frontend (JS):** Lógica y UI en `public/assets/js/`. Capa de datos en `public/assets/js/Dao/`.
+- **Backend (PHP):** Punto de entrada centralizado en `src/Controller/ControladorClass.php`.
+- **Configuración:** Credenciales y secretos NUNCA en el código; leer exclusivamente de `.env`.
+- **Servidor:** El archivo `.htaccess` debe gestionar el enrutamiento SPA y proteger archivos sensibles.
+
+## 🗄️ Estándares de Base de Datos (PostgreSQL)
+- **Idioma:** Todo el esquema de base de datos debe estar estrictamente en **INGLÉS**.
+- **Tablas:** Nombres en plural, minúsculas y usando `snake_case` (ej. `users`, `customer_orders`, `product_categories`).
+- **Campos:** Nombres descriptivos en `snake_case` (ej. `first_name`, `created_at`, `is_active`).
+- **Esquemas:** Usar nombres en inglés para organizar módulos (ej. `auth`, `inventory`, `billing`).
+- **Seguridad SQL:** Uso obligatorio de **PDO** con sentencias preparadas. Prohibida la concatenación de variables.
+- **ACID:** Implementar transacciones (`beginTransaction`, `commit`) para operaciones multitabla.
+
+## 🧼 Clean Code & Sostenibilidad (Martin / Blé)
+- **Nombres en Código:** Variables y funciones en el código también en inglés (preferiblemente) o español muy claro, prohibiendo `data`, `info`, `aux`.
+- **SRP (Single Responsibility):** Una clase por entidad, una función por tarea. Máximo 20 líneas por función.
+- **KISS & YAGNI:** No crear abstracciones ni tablas que no sean requeridas por el negocio actual.
+- **Return Early:** Usar cláusulas de guarda para evitar anidamientos `else`.
+
+## 🧠 JS Object-Oriented & SPA
+- **Encapsulamiento:** Uso de `#private` para propiedades internas en clases ES6.
+- **Contexto:** Métodos de clase como **Arrow Functions (`=>`)** para preservar `this`.
+- **DOM Seguro:** ❌ Prohibido `innerHTML`. ✅ Usar `textContent` o `createElement` (Prevención **XSS**).
+
+## 🔐 Seguridad y Variables de Entorno (.env)
+- **Archivo .env:** Definir `DB_HOST`, `DB_NAME`, `DB_USER`, `DB_PASS`, `DB_PORT` y `JWT_SECRET`.
+- **Protección:** El `.htaccess` debe denegar el acceso público al archivo `.env` y carpetas de configuración.
+- **Auth:** Implementar y validar **JWT** stateless en cada petición al Dispatcher.
+
+## ☁️ Configuración de Servidor (.htaccess)
+- **SPA Routing:** Redirigir peticiones de rutas inexistentes a `index.php`.
+- **Seguridad:** Deshabilitar listado de directorios (`Options -Indexes`) y restringir acceso a archivos `.json`, `.lock` y `.env`.

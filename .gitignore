@@ -1,0 +1,145 @@
+# ============================================
+# ARCHIVOS SENSIBLES - NUNCA COMMITEAR
+# ============================================
+*.env
+**/geros.env
+application-prod.properties
+*.p12
+*.jks
+*.keystore
+*.key
+*.pem
+*.crt
+*.cer
+llave-ceo.pem
+
+# ============================================
+# BACKEND - Java/Maven/Spring Boot
+# ============================================
+backend/target/
+backend/.mvn/
+backend/mvnw
+backend/mvnw.cmd
+backend/.settings/
+backend/.classpath
+backend/.project
+backend/.factorypath
+backend/bin/
+backend/build/
+backend/out/
+
+# Logs
+backend/logs/
+*.log
+*.log.*
+
+# ============================================
+# FRONTEND - Node.js/React/Vite
+# ============================================
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+frontend/.vite/
+frontend/.cache/
+
+# Logs
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/pnpm-debug.log*
+frontend/lerna-debug.log*
+
+# ============================================
+# IDEs y Editores
+# ============================================
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Eclipse
+.metadata/
+.recommenders/
+
+# VS Code
+.vscode/
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# NetBeans
+nbproject/
+nbbuild/
+nbdist/
+.nb-gradle/
+
+# ============================================
+# Sistema Operativo
+# ============================================
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Linux
+*~
+.directory
+
+# ============================================
+# Archivos Temporales
+# ============================================
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+.#*
+\#*#
+
+# ============================================
+# Backups y Exports
+# ============================================
+/backups/
+/storage/security-log-exports/
+*.sql
+*.sql.gz
+*.dump
+*.backup
+
+# ============================================
+# Certificados y Claves (Producción)
+# ============================================
+/config/geros-keystore.p12
+/config/geros-certificate.crt
+/config/geros-private.key
+/config/*.p12
+/config/*.key
+/config/*.crt
+/config/*.pem
+
+# ============================================
+# Archivos de Configuración Sensibles
+# ============================================
+/config/application-prod.properties
+/config/geros.env
+
+# ============================================
+# Otros
+# ============================================
+*.class
+*.jar
+!backend/.mvn/wrapper/maven-wrapper.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
