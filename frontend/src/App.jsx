@@ -17,7 +17,8 @@ import SecurityLog     from './pages/SecurityLog'
 import ForgotPassword  from './pages/ForgotPassword'
 import ResetPassword   from './pages/ResetPassword'
 import ValidateSite    from './pages/ValidateSite'
-
+import ContractList    from './pages/contracts/ContractList'
+import ContractForm    from './pages/contracts/ContractForm'
 function Unauthorized() {
   const { defaultPath } = useAuth()
 
@@ -76,6 +77,9 @@ export default function App() {
           <Route path="/reserved-usernames" element={<PrivateRoute path="/reserved-usernames"><ReservedUsernames /></PrivateRoute>} />
           <Route path="/password-history"  element={<PrivateRoute path="/password-history"><PasswordHistory /></PrivateRoute>} />
           <Route path="/security-log"      element={<PrivateRoute path="/security-log"><SecurityLog /></PrivateRoute>} />
+          <Route path="/contracts"       element={<PrivateRoute path="/contracts"><ContractList /></PrivateRoute>} />
+          <Route path="/contracts/new"   element={<PrivateRoute path="/contracts"><ContractForm /></PrivateRoute>} />
+          <Route path="/contracts/:id"   element={<PrivateRoute path="/contracts"><ContractForm /></PrivateRoute>} />
           <Route path="*"                element={<Navigate to="/login" replace />} />
         </Routes>
       </BrowserRouter>

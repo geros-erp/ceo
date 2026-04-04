@@ -3,11 +3,11 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
 function MenuNode({ item, level = 0 }) {
-  const [open, setOpen]  = useState(true)
-  const navigate         = useNavigate()
-  const location         = useLocation()
-  const hasChildren      = item.children?.length > 0
-  const isActive         = item.path && location.pathname === item.path
+  const [open, setOpen] = useState(true)
+  const navigate = useNavigate()
+  const location = useLocation()
+  const hasChildren = item.children?.length > 0
+  const isActive = item.path && location.pathname === item.path
 
   const handleClick = () => {
     if (hasChildren) setOpen(o => !o)

@@ -8,7 +8,7 @@ export default defineConfig(({ mode }) => ({
   server: {
     proxy: {
       '/api': {
-        target: 'https://localhost:8443',
+        target: 'https://127.0.0.1:8443',
         secure: false, // acepta certificado autofirmado en desarrollo
         changeOrigin: true,
       },
