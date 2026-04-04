@@ -65,9 +65,7 @@ public class SecurityLog {
     @Column(name = "target_email", nullable = false, length = 150)
     private String targetEmail;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "target_email", referencedColumnName = "email", insertable = false, updatable = false)
-    private User targetUser;
+    // Removed ManyToOne targetUser to allow arbitrary targets (like "/api/roles")
 
     @Column(name = "performed_by", length = 150)
     private String performedBy;
@@ -117,7 +115,7 @@ public class SecurityLog {
     public String getOrigin()      { return origin; }
     public String getTransactionId() { return transactionId; }
     public String getTargetEmail() { return targetEmail; }
-    public User getTargetUser()    { return targetUser; }
+    // Getter targetUser removed
     public String getPerformedBy() { return performedBy; }
     public String getDetail()      { return detail; }
     public String getIpAddress()   { return ipAddress; }
