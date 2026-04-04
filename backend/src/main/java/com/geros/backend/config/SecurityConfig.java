@@ -95,7 +95,10 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("https://localhost:5173", "http://localhost:5173"));
+        config.setAllowedOrigins(List.of(
+            "https://localhost:5173", "http://localhost:5173",
+            "https://erpgeros.com", "https://www.erpgeros.com"
+        ));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setExposedHeaders(List.of(TransactionContext.HEADER_NAME));
