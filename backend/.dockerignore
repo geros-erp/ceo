@@ -1,0 +1,38 @@
+# Archivos compilados
+target/
+*.class
+*.jar
+*.war
+
+# Logs
+*.log
+logs/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+
+# Archivos sensibles
+*.env
+*.p12
+*.key
+*.pem
+application-prod.properties
+
+# Storage y backups
+storage/
+backups/
+
+# Maven wrapper
+.mvn/
+mvnw
+mvnw.cmd
