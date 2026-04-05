@@ -86,12 +86,7 @@ public class SecurityLogDTO {
         }
 
         private static String resolveTargetStatus(SecurityLog s) {
-            if (s.getTargetUser() == null) {
-                return null;
-            }
-            return s.getTargetUser().isLocked()
-                    ? "LOCKED"
-                    : Boolean.TRUE.equals(s.getTargetUser().getIsActive()) ? "ACTIVE" : "INACTIVE";
+            return null;
         }
     }
 }
