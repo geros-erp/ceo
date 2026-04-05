@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { getUsers } from '../api/users'
-import { getPasswordHistory } from '../api/passwordHistory'
-import Layout from '../components/Layout'
+import { getUsers } from '../../api/users'
+import { getPasswordHistory } from '../../api/passwordHistory'
+import Layout from '../../components/Layout'
+import { PageHeader, LoadingState } from '../../components/common'
 
 function formatBogotaDateTime(value) {
   return new Date(value).toLocaleString('es-CO', {
@@ -41,13 +42,7 @@ export default function PasswordHistory() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-100">
-      <header className="h-14 bg-indigo-700 flex items-center gap-3 px-6 shrink-0">
-        <button onClick={() => navigate('/dashboard')}
-          className="text-xs bg-white/15 hover:bg-white/25 text-white border border-white/40 px-3 py-1.5 rounded-md">
-          ← Volver
-        </button>
-        <span className="text-white font-semibold">Historial de Contraseñas</span>
-      </header>
+      <PageHeader title="Historial de Contraseñas" />
 
       <Layout>
         <div className="p-6 max-w-3xl mx-auto w-full space-y-5">
@@ -74,7 +69,7 @@ export default function PasswordHistory() {
                 <p className="text-xs text-gray-400">{selected.email}</p>
               </div>
               {loading ? (
-                <p className="text-center text-gray-400 py-8">Cargando...</p>
+                <LoadingState />
               ) : history.length === 0 ? (
                 <p className="text-center text-gray-400 py-8">Sin historial registrado</p>
               ) : (

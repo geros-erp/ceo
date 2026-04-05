@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { getPolicy, updatePolicy } from '../api/policy'
-import Layout from '../components/Layout'
+import { getPolicy, updatePolicy } from '../../api/policy'
+import Layout from '../../components/Layout'
+import { PageHeader, LoadingState } from '../../components/common'
 
 const LABELS = {
   enabled:                    { label: 'Política activa',                        type: 'toggle',  description: 'Activar o desactivar todas las validaciones de contraseña' },
@@ -61,14 +62,11 @@ export default function PasswordPolicy() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-100">
-      <header className="h-14 bg-indigo-700 flex items-center gap-3 px-6 shrink-0">
-        <button onClick={() => navigate('/dashboard')} className="text-xs bg-white/15 hover:bg-white/25 text-white border border-white/40 px-3 py-1.5 rounded-md">← Volver</button>
-        <span className="text-white font-semibold">Política de Contraseñas</span>
-      </header>
+      <PageHeader title="Política de Contraseñas" />
       <Layout>
         <div className="p-6 max-w-2xl mx-auto w-full">
           {loading ? (
-            <div className="flex items-center justify-center min-h-[320px] text-gray-500">Cargando...</div>
+            <LoadingState message="Cargando..." />
           ) : (
           <form onSubmit={handleSubmit} className="space-y-5">
 

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate, useSearchParams, Link } from 'react-router-dom'
-import { resetPassword } from '../api/auth'
+import { resetPassword } from '../../api/auth'
 
 export default function ResetPassword() {
   const [form, setForm]         = useState({ newPassword: '', confirm: '' })

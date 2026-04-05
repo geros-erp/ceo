@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { getAllMenuItems, createMenuItem, updateMenuItem, deleteMenuItem, getAllPermissions, addPermission, removePermission } from '../api/menu'
-import { getRoles } from '../api/roles'
-import Layout from '../components/Layout'
+import { getAllMenuItems, createMenuItem, updateMenuItem, deleteMenuItem, getAllPermissions, addPermission, removePermission } from '../../api/menu'
+import { getRoles } from '../../api/roles'
+import Layout from '../../components/Layout'
+import { PageHeader } from '../../components/common'
 
 const EMPTY = { label: '', path: '', icon: '', sortOrder: 0, active: true, parentId: null }
 const EMPTY_PERMISSION = { menuItemId: '', roleId: '', canView: true, canCreate: false, canUpdate: false, canDelete: false }
@@ -111,10 +112,7 @@ export default function MenuConfig() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-100">
-      <header className="h-14 bg-indigo-700 flex items-center gap-3 px-6 shrink-0">
-        <button onClick={() => navigate('/dashboard')} className="text-xs bg-white/15 hover:bg-white/25 text-white border border-white/40 px-3 py-1.5 rounded-md">← Volver</button>
-        <span className="text-white font-semibold">Configuración de Menú</span>
-      </header>
+      <PageHeader title="Configuración de Menú" />
       <Layout>
         <div className="p-6 max-w-6xl mx-auto w-full space-y-6">
           <div>

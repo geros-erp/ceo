@@ -1,9 +1,9 @@
 import { useState, useCallback, useEffect } from 'react'
 import { useNavigate, Link, useLocation } from 'react-router-dom'
 import { useGoogleReCaptcha } from 'react-google-recaptcha-v3'
-import { login } from '../api/auth'
-import { useAuth } from '../context/AuthContext'
-import { usePreventBackNavigation } from '../hooks/usePreventBackNavigation'
+import { login } from '../../api/auth'
+import { useAuth } from '../../context/AuthContext'
+import { usePreventBackNavigation } from '../../hooks/usePreventBackNavigation'
 
 export default function Login() {
   usePreventBackNavigation() // Prevenir volver atrás después de logout

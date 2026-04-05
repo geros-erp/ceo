@@ -1,10 +1,10 @@
 import { useState, useEffect, useCallback } from 'react'
-import { useAuth } from '../context/AuthContext'
+import { useAuth } from '../../context/AuthContext'
 import { useNavigate } from 'react-router-dom'
 import { getUsers, createUser, updateUser, deleteUser,
-         lockUser, unlockUser, adminChangePassword } from '../api/users'
-import { getRoles } from '../api/roles'
-import Layout from '../components/Layout'
+         lockUser, unlockUser, adminChangePassword } from '../../api/users'
+import { getRoles } from '../../api/roles'
+import Layout from '../../components/Layout'
 
 const EMPTY_FORM = { username: '', firstName: '', lastName: '', email: '', isActive: true, roleIds: [] }
 

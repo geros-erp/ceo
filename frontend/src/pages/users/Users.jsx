@@ -1,10 +1,11 @@
 import { useState, useEffect, useCallback } from 'react'
-import { useAuth } from '../context/AuthContext'
+import { useAuth } from '../../context/AuthContext'
 import { useNavigate } from 'react-router-dom'
 import { getUsers, createUser, updateUser, deleteUser,
-         lockUser, unlockUser, adminChangePassword } from '../api/users'
-import { getRoles } from '../api/roles'
-import Layout from '../components/Layout'
+         lockUser, unlockUser, adminChangePassword } from '../../api/users'
+import { getRoles } from '../../api/roles'
+import Layout from '../../components/Layout'
+import { PageHeader, Pagination, SearchBar, StatusBadge, LoadingState } from '../../components/common'
 
 const EMPTY_FORM = { username: '', firstName: '', lastName: '', email: '', isActive: true, roleIds: [] }
 
@@ -97,10 +98,7 @@ export default function Users() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-100">
-      <header className="h-14 bg-indigo-700 flex items-center gap-3 px-6 shrink-0">
-        <button onClick={() => navigate('/dashboard')} className="text-xs bg-white/15 hover:bg-white/25 text-white border border-white/40 px-3 py-1.5 rounded-md">← Volver</button>
-        <span className="text-white font-semibold">Gestión de Usuarios</span>
-      </header>
+      <PageHeader title="Gestión de Usuarios" />
       <Layout>
         <div className="p-6">
           <div className="mb-6">
@@ -148,9 +146,11 @@ export default function Users() {
           )}
 
           <div className="flex gap-3 mb-4">
-            <input className="flex-1 max-w-sm border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-indigo-500"
+            <SearchBar 
               placeholder="Buscar por nombre o email..."
-              value={search} onChange={e => { setSearch(e.target.value); setPage(0) }} />
+              value={search} 
+              onChange={e => { setSearch(e.target.value); setPage(0) }} 
+            />
             <select
               value={roleFilter}
               onChange={e => { setRoleFilter(e.target.value); setPage(0) }}
@@ -173,7 +173,7 @@ export default function Users() {
           </div>
 
           {loading ? (
-            <p className="text-center text-gray-500 py-8">Cargando...</p>
+            <LoadingState />
           ) : (
             <>
               <div className="bg-white rounded-lg shadow-sm overflow-hidden">
@@ -223,11 +223,11 @@ export default function Users() {
                           <td className="px-4 py-3">
                             <div className="flex flex-col gap-1">
                               {u.locked
-                                ? <span className="text-xs bg-red-100 text-red-600 px-2 py-0.5 rounded-full w-fit">🔒 Bloqueado</span>
+                                ? <StatusBadge variant="error" label="🔒 Bloqueado" />
                                 : u.isActive
-                                  ? <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full w-fit">✓ Activo</span>
-                                  : <span className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full w-fit">○ Inactivo</span>}
-                              {u.mustChangePassword && <span className="text-xs bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded-full w-fit" title="Debe cambiar contraseña">⚠ Cambio requerido</span>}
+                                  ? <StatusBadge variant="success" label="✓ Activo" />
+                                  : <StatusBadge variant="gray" label="○ Inactivo" />}
+                              {u.mustChangePassword && <StatusBadge variant="warning" label="⚠ Cambio requerido" />}
                               {u.defaultUser && !u.isActive && (
                                 <span className="text-xs text-purple-600 font-medium" title="Usuario guardado en custodia física">
                                   📦 Custodia física
@@ -258,13 +258,12 @@ export default function Users() {
                 </table>
               </div>
 
-              <div className="flex items-center justify-center gap-4 mt-4 text-sm text-gray-500">
-                <button disabled={page === 0} onClick={() => setPage(p => p - 1)}
-                  className="border border-gray-300 bg-white px-3 py-1.5 rounded-md disabled:opacity-40 hover:bg-gray-50">‹ Anterior</button>
-                <span>Página {page + 1} de {totalPages || 1} — {total} registros</span>
-                <button disabled={page + 1 >= totalPages} onClick={() => setPage(p => p + 1)}
-                  className="border border-gray-300 bg-white px-3 py-1.5 rounded-md disabled:opacity-40 hover:bg-gray-50">Siguiente ›</button>
-              </div>
+              <Pagination 
+                page={page} 
+                totalPages={totalPages} 
+                total={total} 
+                onPageChange={setPage} 
+              />
             </>
           )}
         </div>

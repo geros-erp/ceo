@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react'
-import { useAuth } from '../context/AuthContext'
+import { useAuth } from '../../context/AuthContext'
 import { useNavigate } from 'react-router-dom'
-import { getUsers } from '../api/users'
-import { getRoles } from '../api/roles'
-import Layout from '../components/Layout'
+import { getUsers } from '../../api/users'
+import { getRoles } from '../../api/roles'
+import Layout from '../../components/Layout'
 
 export default function DashboardHome() {
   const { user } = useAuth()

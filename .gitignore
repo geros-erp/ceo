@@ -126,6 +126,16 @@ $RECYCLE.BIN/
 /config/*.crt
 /config/*.pem
 
+# Certificados WS-Security
+/backend/src/main/resources/certificates/*.p12
+/backend/src/main/resources/certificates/*.jks
+/backend/src/main/resources/certificates/*.cer
+/backend/src/main/resources/certificates/*.crt
+/backend/src/main/resources/certificates/*.key
+/backend/src/main/resources/certificates/*.pem
+/scripts/certificates/
+certificates/
+
 # ============================================
 # Archivos de Configuración Sensibles
 # ============================================

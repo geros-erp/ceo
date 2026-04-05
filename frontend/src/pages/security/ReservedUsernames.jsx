@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import Layout from '../components/Layout'
-import { getReservedUsernames, createReservedUsername, deleteReservedUsername } from '../api/reservedUsernames'
+import Layout from '../../components/Layout'
+import { PageHeader, LoadingState } from '../../components/common'
+import { getReservedUsernames, createReservedUsername, deleteReservedUsername } from '../../api/reservedUsernames'
 
 export default function ReservedUsernames() {
   const [reserved, setReserved] = useState([])
@@ -65,15 +66,7 @@ export default function ReservedUsernames() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-100">
-      <header className="h-14 bg-indigo-700 flex items-center gap-3 px-6 shrink-0">
-        <button
-          onClick={() => navigate('/dashboard')}
-          className="text-xs bg-white/15 hover:bg-white/25 text-white border border-white/40 px-3 py-1.5 rounded-md transition-colors"
-        >
-          ← Volver
-        </button>
-        <span className="text-white font-semibold">Control de Identidades</span>
-      </header>
+      <PageHeader title="Control de Identidades" />
 
       <Layout>
         <div className="p-6 max-w-2xl mx-auto w-full space-y-6">
@@ -103,7 +96,7 @@ export default function ReservedUsernames() {
             <div className="px-6 py-3 bg-gray-50 border-b font-semibold text-gray-600 uppercase text-xs tracking-wider">Lista de Restricciones</div>
             <div className="divide-y divide-gray-100">
               {loading ? (
-                <div className="p-8 text-center text-gray-400 text-sm italic">Cargando lista...</div>
+                <LoadingState message="Cargando lista..." />
               ) : reserved.length === 0 ? (
                 <div className="p-8 text-center text-gray-400 text-sm">No hay usernames reservados actualmente.</div>
               ) : reserved.map((item) => (

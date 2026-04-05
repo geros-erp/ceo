@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import api from '../api/auth'
-import { useAuth } from '../context/AuthContext'
+import api from '../../api/auth'
+import { useAuth } from '../../context/AuthContext'
 
 export default function ChangePassword() {
   const [form, setForm]       = useState({ currentPassword: '', newPassword: '', confirm: '' })

@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { useGoogleReCaptcha } from 'react-google-recaptcha-v3'
-import { forgotPassword } from '../api/auth'
+import { forgotPassword } from '../../api/auth'
 
 export default function ForgotPassword() {
   const [email, setEmail]     = useState('')

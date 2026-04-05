@@ -2,21 +2,34 @@ import { BrowserRouter, Routes, Route, Navigate, Link } from 'react-router-dom'
 import { AuthProvider, useAuth } from './context/AuthContext'
 import { useBlockBrowserHistory } from './hooks/useBlockBrowserHistory'
 import SessionTimeout from './components/SessionTimeout'
-import Login        from './pages/Login'
-import DashboardHome from './pages/DashboardHome'
-import Users        from './pages/Users'
-import PasswordPolicy from './pages/PasswordPolicy'
-import ChangePassword from './pages/ChangePassword'
-import Roles        from './pages/Roles'
-import AdConfig     from './pages/AdConfig'
-import MailConfig   from './pages/MailConfig'
-import MenuConfig      from './pages/MenuConfig'
-import PasswordHistory from './pages/PasswordHistory'
-import ReservedUsernames from './pages/ReservedUsernames'
-import SecurityLog     from './pages/SecurityLog'
-import ForgotPassword  from './pages/ForgotPassword'
-import ResetPassword   from './pages/ResetPassword'
-import ValidateSite    from './pages/ValidateSite'
+// Auth
+import Login        from './pages/auth/Login'
+import ForgotPassword  from './pages/auth/ForgotPassword'
+import ResetPassword   from './pages/auth/ResetPassword'
+import ChangePassword from './pages/auth/ChangePassword'
+import ValidateSite    from './pages/auth/ValidateSite'
+
+// Dashboard
+import DashboardHome from './pages/dashboard/DashboardHome'
+
+// Users
+import Users        from './pages/users/Users'
+
+// Roles
+import Roles        from './pages/roles/Roles'
+
+// Security
+import PasswordPolicy from './pages/security/PasswordPolicy'
+import PasswordHistory from './pages/security/PasswordHistory'
+import ReservedUsernames from './pages/security/ReservedUsernames'
+import SecurityLog     from './pages/security/SecurityLog'
+
+// Config
+import AdConfig     from './pages/config/AdConfig'
+import MailConfig   from './pages/config/MailConfig'
+import MenuConfig      from './pages/config/MenuConfig'
+
+// Contracts & Projects
 import ContractList    from './pages/contracts/ContractList'
 import ContractForm    from './pages/contracts/ContractForm'
 import ProjectList     from './pages/projects/ProjectList'

@@ -1,14 +1,15 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useAuth } from '../context/AuthContext'
+import { useAuth } from '../../context/AuthContext'
 import {
   downloadSecurityLogExport,
   exportSecurityLog,
   getLogActions,
   getSecurityLog,
   getSecurityLogExports,
-} from '../api/securitylog'
-import Layout from '../components/Layout'
+} from '../../api/securitylog'
+import Layout from '../../components/Layout'
+import { PageHeader, Pagination, StatusBadge, LoadingState } from '../../components/common'
 
 const ACTION_LABELS = {
   USER_CREATED: { label: 'Usuario creado', color: 'bg-blue-100 text-blue-700' },
@@ -167,15 +168,7 @@ export default function SecurityLog() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-100">
-      <header className="h-14 bg-indigo-700 flex items-center gap-3 px-6 shrink-0">
-        <button
-          onClick={() => navigate('/dashboard')}
-          className="text-xs bg-white/15 hover:bg-white/25 text-white border border-white/40 px-3 py-1.5 rounded-md"
-        >
-          {'<-'} Volver
-        </button>
-        <span className="text-white font-semibold">Log de Seguridad</span>
-      </header>
+      <PageHeader title="Log de Seguridad" />
 
       <Layout>
         <div className="p-6 max-w-7xl mx-auto w-full space-y-4">
@@ -338,9 +331,7 @@ export default function SecurityLog() {
               <tbody>
                 {loading ? (
                   <tr>
-                    <td colSpan={10} className="text-center text-gray-400 py-8">
-                      Cargando...
-                    </td>
+                    <td colSpan={10}><LoadingState /></td>
                   </tr>
                 ) : logs.length === 0 ? (
                   <tr>
@@ -362,14 +353,10 @@ export default function SecurityLog() {
                           {renderValue(log.transactionId)}
                         </td>
                         <td className="px-4 py-3">
-                          <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${actionMeta.color}`}>
-                            {actionMeta.label}
-                          </span>
+                          <StatusBadge variant="default" label={actionMeta.label} />
                         </td>
                         <td className="px-4 py-3">
-                          <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${typeMeta.color}`}>
-                            {typeMeta.label}
-                          </span>
+                          <StatusBadge variant="default" label={typeMeta.label} />
                         </td>
                         <td className="px-4 py-3 text-xs text-gray-600">
                           <div>{renderValue(log.origin)}</div>
@@ -452,25 +439,12 @@ export default function SecurityLog() {
             </div>
           )}
 
-          <div className="flex items-center justify-center gap-4 text-sm text-gray-500">
-            <button
-              disabled={page === 0}
-              onClick={() => setPage(current => current - 1)}
-              className="border border-gray-300 bg-white px-3 py-1.5 rounded-md disabled:opacity-40 hover:bg-gray-50"
-            >
-              ‹ Anterior
-            </button>
-            <span>
-              Pagina {page + 1} de {totalPages || 1} - {total} registros
-            </span>
-            <button
-              disabled={page + 1 >= totalPages}
-              onClick={() => setPage(current => current + 1)}
-              className="border border-gray-300 bg-white px-3 py-1.5 rounded-md disabled:opacity-40 hover:bg-gray-50"
-            >
-              Siguiente ›
-            </button>
-          </div>
+          <Pagination 
+            page={page} 
+            totalPages={totalPages} 
+            total={total} 
+            onPageChange={setPage} 
+          />
         </div>
       </Layout>
     </div>

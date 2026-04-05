@@ -1,22 +1,10 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { getMailConfig, updateMailConfig } from '../api/mailconfig'
-import Layout from '../components/Layout'
+import { getAdConfig, updateAdConfig } from '../../api/adconfig'
+import Layout from '../../components/Layout'
+import { PageHeader, LoadingState } from '../../components/common'
 
-const EMPTY = { enabled: false, host: '', port: 587, username: '', password: '', useTls: true, useSsl: false, fromAddress: '', fromName: '' }
-
-function normalizeMailConfig(data = {}) {
-  return {
-    ...EMPTY,
-    ...data,
-    host: data.host ?? '',
-    username: data.username ?? '',
-    password: '',
-    fromAddress: data.fromAddress ?? '',
-    fromName: data.fromName ?? '',
-    port: data.port ?? EMPTY.port,
-  }
-}
+const EMPTY = { enabled: false, host: '', port: 389, domain: '', baseDn: '', bindUser: '', bindPassword: '', useSsl: false }
 
 function Toggle({ checked, onChange, disabled }) {
   return (
@@ -37,7 +25,7 @@ function Row({ label, children }) {
   )
 }
 
-export default function MailConfig() {
+export default function AdConfig() {
   const [form, setForm]       = useState(EMPTY)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving]   = useState(false)
@@ -46,17 +34,14 @@ export default function MailConfig() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    getMailConfig()
-      .then(({ data }) => setForm(normalizeMailConfig(data)))
-      .catch(() => setError('Error al cargar'))
-      .finally(() => setLoading(false))
+    getAdConfig().then(({ data }) => setForm({ ...EMPTY, ...data })).catch(() => setError('Error al cargar')).finally(() => setLoading(false))
   }, [])
 
   const set = (name, value) => setForm(f => ({ ...f, [name]: value }))
 
   const handleSubmit = async (e) => {
     e.preventDefault(); setSaving(true); setError(''); setSuccess(false)
-    try { await updateMailConfig({ ...form, port: parseInt(form.port) }); setSuccess(true); setTimeout(() => setSuccess(false), 3000) }
+    try { await updateAdConfig({ ...form, port: parseInt(form.port) }); setSuccess(true); setTimeout(() => setSuccess(false), 3000) }
     catch (err) { setError(err.response?.data?.message || 'Error al guardar') }
     finally { setSaving(false) }
   }
@@ -65,35 +50,31 @@ export default function MailConfig() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-100">
-      <header className="h-14 bg-indigo-700 flex items-center gap-3 px-6 shrink-0">
-        <button onClick={() => navigate('/dashboard')} className="text-xs bg-white/15 hover:bg-white/25 text-white border border-white/40 px-3 py-1.5 rounded-md">← Volver</button>
-        <span className="text-white font-semibold">Correo Electrónico (SMTP)</span>
-      </header>
+      <PageHeader title="Directorio Activo (AD)" />
       <Layout>
         <div className="p-6 max-w-2xl mx-auto w-full">
           {loading ? (
-            <div className="flex items-center justify-center min-h-[320px] text-gray-500">Cargando...</div>
+            <LoadingState />
           ) : (
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className={`flex items-center justify-between bg-white rounded-lg p-4 shadow-sm border-l-4 ${form.enabled ? 'border-indigo-500' : 'border-gray-300'}`}>
-              <div><p className="font-medium text-gray-800">Envío de correos activo</p><p className="text-xs text-gray-500">Habilitar envío automático de credenciales al crear usuarios</p></div>
+              <div><p className="font-medium text-gray-800">Autenticación AD activa</p><p className="text-xs text-gray-500">Habilitar inicio de sesión mediante Directorio Activo</p></div>
               <Toggle checked={form.enabled} onChange={e => set('enabled', e.target.checked)} />
             </div>
 
             <div className={`space-y-2 ${!form.enabled ? 'opacity-50 pointer-events-none' : ''}`}>
-              <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Servidor SMTP</h3>
-              <Row label="Host"><input value={form.host} onChange={e => set('host', e.target.value)} placeholder="smtp.gmail.com" className={inputCls(!form.enabled)} /></Row>
+              <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Conexión</h3>
+              <Row label="Host / IP"><input value={form.host} onChange={e => set('host', e.target.value)} placeholder="192.168.1.10" className={inputCls(!form.enabled)} /></Row>
               <Row label="Puerto"><input type="number" value={form.port} onChange={e => set('port', e.target.value)} min={1} max={65535} className="w-24 border border-gray-300 rounded-md px-2 py-1.5 text-sm text-center focus:outline-none focus:border-indigo-500" /></Row>
-              <Row label="Usar TLS (STARTTLS)"><Toggle checked={form.useTls} onChange={e => set('useTls', e.target.checked)} disabled={!form.enabled} /></Row>
-              <Row label="Usar SSL"><Toggle checked={form.useSsl} onChange={e => set('useSsl', e.target.checked)} disabled={!form.enabled} /></Row>
+              <Row label="Usar SSL (LDAPS)"><Toggle checked={form.useSsl} onChange={e => set('useSsl', e.target.checked)} disabled={!form.enabled} /></Row>
 
-              <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider pt-2">Autenticación</h3>
-              <Row label="Usuario"><input value={form.username} onChange={e => set('username', e.target.value)} placeholder="correo@empresa.com" className={inputCls(!form.enabled)} /></Row>
-              <Row label="Contraseña"><input type="password" value={form.password} onChange={e => set('password', e.target.value)} placeholder="Dejar vacío para no cambiar" className={inputCls(!form.enabled)} /></Row>
+              <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider pt-2">Dominio</h3>
+              <Row label="Dominio"><input value={form.domain} onChange={e => set('domain', e.target.value)} placeholder="empresa.local" className={inputCls(!form.enabled)} /></Row>
+              <Row label="Base DN"><input value={form.baseDn} onChange={e => set('baseDn', e.target.value)} placeholder="DC=empresa,DC=local" className={inputCls(!form.enabled)} /></Row>
 
-              <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider pt-2">Remitente</h3>
-              <Row label="Correo remitente"><input value={form.fromAddress} onChange={e => set('fromAddress', e.target.value)} placeholder="noreply@empresa.com" className={inputCls(!form.enabled)} /></Row>
-              <Row label="Nombre remitente"><input value={form.fromName} onChange={e => set('fromName', e.target.value)} placeholder="Sistema Geros" className={inputCls(!form.enabled)} /></Row>
+              <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider pt-2">Credenciales de enlace</h3>
+              <Row label="Bind User"><input value={form.bindUser} onChange={e => set('bindUser', e.target.value)} placeholder="CN=ldap-user,DC=empresa,DC=local" className={inputCls(!form.enabled)} /></Row>
+              <Row label="Bind Password"><input type="password" value={form.bindPassword} onChange={e => set('bindPassword', e.target.value)} placeholder="Dejar vacío para no cambiar" className={inputCls(!form.enabled)} /></Row>
             </div>
 
             {error   && <p className="text-red-600 text-sm">{error}</p>}

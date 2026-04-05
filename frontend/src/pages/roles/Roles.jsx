@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { getRoles, getRolePrivilegeCatalog, getRolePermissions, getRoleUsers, createRole, updateRole, deleteRole } from '../api/roles'
-import Layout from '../components/Layout'
+import { getRoles, getRolePrivilegeCatalog, getRolePermissions, getRoleUsers, createRole, updateRole, deleteRole } from '../../api/roles'
+import Layout from '../../components/Layout'
+import { PageHeader, StatusBadge } from '../../components/common'
 
 const PRIVILEGED_PATHS = ['/security-log']
 const AUDIT_PATHS = ['/security-log', '/password-history']
@@ -243,10 +244,7 @@ export default function Roles() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-100">
-      <header className="h-14 bg-indigo-700 flex items-center gap-3 px-6 shrink-0">
-        <button onClick={() => navigate('/dashboard')} className="text-xs bg-white/15 hover:bg-white/25 text-white border border-white/40 px-3 py-1.5 rounded-md">← Volver</button>
-        <span className="text-white font-semibold">Gestión de Perfiles</span>
-      </header>
+      <PageHeader title="Gestión de Perfiles" />
       <Layout>
         <div className="p-6 max-w-6xl mx-auto w-full">
           <div className="flex justify-between items-center mb-4">
@@ -280,13 +278,13 @@ export default function Roles() {
                         </td>
                         <td className="px-4 py-3 text-gray-500">{role.description || '—'}</td>
                         <td className="px-4 py-3">
-                          <span className="text-xs bg-slate-100 text-slate-700 px-2 py-0.5 rounded-full">{summary.modules} funciones con acceso</span>
+                          <StatusBadge variant="default" label={`${summary.modules} funciones con acceso`} />
                         </td>
                         <td className="px-4 py-3">
                           <div className="flex flex-wrap gap-1">
-                            <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">Crear {summary.creates}</span>
-                            <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">Editar {summary.updates}</span>
-                            <span className="text-xs bg-rose-100 text-rose-700 px-2 py-0.5 rounded-full">Eliminar {summary.deletes}</span>
+                            <StatusBadge variant="info" label={`Crear ${summary.creates}`} />
+                            <StatusBadge variant="warning" label={`Editar ${summary.updates}`} />
+                            <StatusBadge variant="error" label={`Eliminar ${summary.deletes}`} />
                           </div>
                         </td>
                         <td className="px-4 py-3">
