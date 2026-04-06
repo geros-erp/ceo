@@ -1,0 +1,121 @@
+name: CI/CD Pipeline Geros
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  AWS_REGION: ${{ secrets.AWS_REGION }}
+  TARGET_DIR: "/home/${{ secrets.EC2_USER }}/geros" # Ruta donde clonaste el proyecto
+  JAR_NAME: "geros-backend.jar"
+
+jobs:
+  backend-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Build Backend with Maven
+        run: mvn -f backend/pom.xml clean package -DskipTests
+
+      - name: Run Backend Tests
+        run: mvn -f backend/pom.xml test
+
+      - name: Upload JAR Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-jar
+          path: backend/target/*.jar
+
+  frontend-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install Frontend Dependencies
+        run: npm install --prefix frontend
+
+      - name: Build Frontend
+        run: npm run build --prefix frontend
+
+      - name: Upload Static Files Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-dist
+          path: frontend/dist/
+
+  deploy:
+    needs: [backend-build, frontend-build]
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download Backend JAR
+        uses: actions/download-artifact@v4
+        with:
+          name: backend-jar
+          path: ./artifacts/backend
+
+      - name: Download Frontend Files
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-dist
+          path: ./artifacts/frontend
+
+      - name: Upload Artifacts to AWS via SCP
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: "artifacts/*"
+          target: ${{ env.TARGET_DIR }}
+          strip_components: 1
+
+      - name: Deploy and Restart via SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd ${{ env.TARGET_DIR }}
+            
+            # 1. Asegurar directorios de destino
+            mkdir -p backend/target
+            
+            # 2. Actualizar el JAR del Backend
+            cp artifacts/backend/*.jar backend/target/${{ env.JAR_NAME }}
+            
+            # 3. Actualizar Frontend en la ruta de Nginx
+            sudo rm -rf /usr/share/nginx/html/*
+            sudo cp -r artifacts/frontend/* /usr/share/nginx/html/
+            
+            # 4. Ejecutar monitoreo de integridad antes de reiniciar
+            chmod +x scripts/monitor-critical-files.sh
+            ./scripts/monitor-critical-files.sh verify
+            
+            # 5. Reiniciar el servicio del Backend
+            sudo systemctl restart geros-backend
+            
+            # 6. Limpiar artefactos temporales
+            rm -rf artifacts/
+            echo "Despliegue finalizado con éxito."
