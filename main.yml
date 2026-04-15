@@ -109,7 +109,17 @@ jobs:
             sudo rm -rf /usr/share/nginx/html/*
             sudo cp -r artifacts/frontend/* /usr/share/nginx/html/
             
-            # 4. Reiniciar el servicio del Backend
+            # 4. Configurar Cabeceras de Seguridad en Nginx automáticamente
+            NGINX_CONF="/etc/nginx/sites-available/default"
+            if [ -f "$NGINX_CONF" ]; then
+                # Solo añadir si no existen ya para evitar duplicados
+                if ! sudo grep -q "Strict-Transport-Security" "$NGINX_CONF"; then
+                    sudo sed -i "/server_name/a \    add_header Strict-Transport-Security \"max-age=31536000; includeSubDomains; preload\" always;\n    add_header X-Content-Type-Options \"nosniff\" always;\n    add_header X-Frame-Options \"DENY\" always;\n    add_header Referrer-Policy \"strict-origin-when-cross-origin\" always;\n    add_header Content-Security-Policy \"default-src 'self'; script-src 'self' https://www.gstatic.com https://www.google.com https://www.recaptcha.net https://cdn.jsdelivr.net 'unsafe-inline'; frame-src https://www.google.com https://www.recaptcha.net https://recaptcha.google.com; connect-src 'self' https://www.google.com https://www.gstatic.com https://recaptcha.google.com; img-src 'self' data: https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; form-action 'self'; frame-ancestors 'self';\" always;" "$NGINX_CONF"
+                    sudo nginx -t && sudo systemctl restart nginx
+                fi
+            fi
+            
+            # 5. Reiniciar el servicio del Backend
             sudo systemctl restart geros-backend
             
             # 6. Limpiar artefactos temporales
