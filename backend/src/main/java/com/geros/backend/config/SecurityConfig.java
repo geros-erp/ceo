@@ -52,21 +52,6 @@ public class SecurityConfig {
                 .requestMatchers("/api/auth/login", "/api/auth/forgot-password", "/api/auth/reset-password").permitAll()
                 .anyRequest().authenticated()
             )
-            .headers(headers -> headers
-                .contentSecurityPolicy(csp -> csp
-                    .policyDirectives(
-                        "default-src 'self'; " +
-                        "script-src 'self' https://www.gstatic.com https://www.google.com https://www.recaptcha.net https://cdn.jsdelivr.net 'unsafe-inline'; " +
-                        "frame-src https://www.google.com https://www.recaptcha.net https://recaptcha.google.com; " +
-                        "connect-src 'self' https://www.google.com https://www.gstatic.com https://recaptcha.google.com; " +
-                        "img-src 'self' data: https:; " +
-                        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
-                        "font-src 'self' https://fonts.gstatic.com; " +
-                        "form-action 'self'; " +
-                        "frame-ancestors 'self' https://localhost:5173 http://localhost:5173"
-                    )
-                )
-            )
             .addFilterBefore(transactionTraceFilter, UsernamePasswordAuthenticationFilter.class)
             .addFilterBefore(securityHeadersFilter, TransactionTraceFilter.class)
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
