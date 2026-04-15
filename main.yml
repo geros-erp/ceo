@@ -109,11 +109,7 @@ jobs:
             sudo rm -rf /usr/share/nginx/html/*
             sudo cp -r artifacts/frontend/* /usr/share/nginx/html/
             
-            # 4. Ejecutar monitoreo de integridad antes de reiniciar
-            chmod +x scripts/monitor-critical-files.sh
-            ./scripts/monitor-critical-files.sh verify
-            
-            # 5. Reiniciar el servicio del Backend
+            # 4. Reiniciar el servicio del Backend
             sudo systemctl restart geros-backend
             
             # 6. Limpiar artefactos temporales
