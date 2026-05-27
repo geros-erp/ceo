@@ -1,35 +1,51 @@
-# 🎯 REGLAS MAESTRAS DE ARQUITECTURA Y CLEAN CODE (v2026)
+# 🎯 REGLAS MAESTRAS GEROS - REACT & SPRING BOOT (v2026)
 
 ## 📂 Estructura, Directorios y Rutas
-- **Frontend (JS):** Lógica y UI en `public/assets/js/`. Capa de datos en `public/assets/js/Dao/`.
-- **Backend (PHP):** Punto de entrada centralizado en `src/Controller/ControladorClass.php`.
-- **Configuración:** Credenciales y secretos NUNCA en el código; leer exclusivamente de `.env`.
-- **Servidor:** El archivo `.htaccess` debe gestionar el enrutamiento SPA y proteger archivos sensibles.
+- **Frontend (React):** 
+    - Componentes en `src/components/`.
+    - Lógica de estado y hooks en `src/hooks/`.
+    - Capa de datos y API en `src/services/` (Equivalente al DAO). *Nota: Actualmente en `src/api/`, migrar según convenga.*
+- **Backend (Spring Boot):**
+    - Controladores en `src/main/java/com/geros/backend/*/` (Organizado por módulos).
+    - Lógica de negocio en `src/main/java/com/geros/backend/*/` (Uso de capas Service).
+    - Repositorios en `src/main/java/com/geros/backend/*/` (Uso de Spring Data JPA).
+- **Configuración:** Credenciales en `application.properties` o variables de entorno. NUNCA en el código.
 
 ## 🗄️ Estándares de Base de Datos (PostgreSQL)
-- **Idioma:** Todo el esquema de base de datos debe estar estrictamente en **INGLÉS**.
-- **Tablas:** Nombres en plural, minúsculas y usando `snake_case` (ej. `users`, `customer_orders`, `product_categories`).
-- **Campos:** Nombres descriptivos en `snake_case` (ej. `first_name`, `created_at`, `is_active`).
-- **Esquemas:** Usar nombres en inglés para organizar módulos (ej. `auth`, `inventory`, `billing`).
-- **Seguridad SQL:** Uso obligatorio de **PDO** con sentencias preparadas. Prohibida la concatenación de variables.
-- **ACID:** Implementar transacciones (`beginTransaction`, `commit`) para operaciones multitabla.
+- **Idioma:** Esquema estrictamente en **INGLÉS**.
+- **Tablas:** Plural y `snake_case` (ej. `users`, `inventory_items`).
+- **Campos:** `snake_case` descriptivo (ej. `last_login`, `is_deleted`).
+- **Organización:** Ubicar las tablas en esquemas específicos según su propósito (ej. `auth`, `inventory`, `billing`). Si el esquema no existe, debe crearse explícitamente (`CREATE SCHEMA IF NOT EXISTS`).
+- **Persistencia:** Uso de **Spring Data JPA**. Prohibidas las queries nativas a menos que sea por optimización crítica (usar `@Query` con JPQL preferiblemente).
+- **Documentación:** Obligatorio agregar comentarios (`COMMENT ON TABLE` y `COMMENT ON COLUMN`) para describir el propósito de cada tabla y campo en el esquema.
+- **Transacciones:** Uso de `@Transactional` para asegurar integridad ACID.
 
 ## 🧼 Clean Code & Sostenibilidad (Martin / Blé)
-- **Nombres en Código:** Variables y funciones en el código también en inglés (preferiblemente) o español muy claro, prohibiendo `data`, `info`, `aux`.
-- **SRP (Single Responsibility):** Una clase por entidad, una función por tarea. Máximo 20 líneas por función.
-- **KISS & YAGNI:** No crear abstracciones ni tablas que no sean requeridas por el negocio actual.
-- **Return Early:** Usar cláusulas de guarda para evitar anidamientos `else`.
+- **Nombres en Código:** Variables, clases y métodos en **INGLÉS**. Prohibido `data`, `info`, `temp`.
+- **SRP (Single Responsibility):** 
+    - **Spring:** Un Controller por Entidad, un Service por lógica compleja.
+    - **React:** Un componente por archivo, máximo 150 líneas. Si crece, extraer subcomponentes.
+- **Return Early:** Cláusulas de guarda para evitar `else` en Java y validaciones de props en React.
 
-## 🧠 JS Object-Oriented & SPA
-- **Encapsulamiento:** Uso de `#private` para propiedades internas en clases ES6.
-- **Contexto:** Métodos de clase como **Arrow Functions (`=>`)** para preservar `this`.
-- **DOM Seguro:** ❌ Prohibido `innerHTML`. ✅ Usar `textContent` o `createElement` (Prevención **XSS**).
+## 🧠 Frontend (React & TypeScript/JS)
+- **Functional Components:** Uso de Hooks (`useState`, `useEffect`, `useMemo`).
+- **Services (DAO):** Las peticiones `fetch` o `axios` deben vivir exclusivamente en `src/services/` (o `src/api/`).
+- **Arquitectura de Clases:** Para lógica pura de negocio en el Front, usar clases ES6 con propiedades `#private` y métodos Arrow Function para mantener contexto.
+- **DOM Seguro:** ❌ Prohibido `dangerouslySetInnerHTML`. ✅ Usar renderizado condicional y mapeo de componentes.
 
-## 🔐 Seguridad y Variables de Entorno (.env)
-- **Archivo .env:** Definir `DB_HOST`, `DB_NAME`, `DB_USER`, `DB_PASS`, `DB_PORT` y `JWT_SECRET`.
-- **Protección:** El `.htaccess` debe denegar el acceso público al archivo `.env` y carpetas de configuración.
-- **Auth:** Implementar y validar **JWT** stateless en cada petición al Dispatcher.
+## ☕ Backend (Spring Boot & Java 21)
+- **Tipado Estricto:** Uso de DTOs (`Data Transfer Objects`) para entrada y salida de API.
+- **Seguridad:**
+    - **JWT:** Validación stateless vía `OncePerRequestFilter`.
+    - **RBAC:** Uso de `@PreAuthorize("hasRole('ROLE_ADMIN')")` en métodos del controlador.
+- **RESTful:** Las peticiones se mapean vía `@RestController` siguiendo principios RESTful (GET, POST, PUT, DELETE).
 
-## ☁️ Configuración de Servidor (.htaccess)
-- **SPA Routing:** Redirigir peticiones de rutas inexistentes a `index.php`.
-- **Seguridad:** Deshabilitar listado de directorios (`Options -Indexes`) y restringir acceso a archivos `.json`, `.lock` y `.env`.
+## 🔐 Seguridad y Variables de Entorno
+- **Frontend:** Variables con prefijo `VITE_`.
+- **Backend:** Uso de perfiles (`dev`, `prod`) en Spring y overrides via `Environment Variables`.
+- **CORS:** Configuración estricta permitiendo solo el dominio del frontend.
+
+## ☁️ Infraestructura y Errores
+- **Gestión:** Maven para dependencias (ver `pom.xml`).
+- **Global Exception Handler:** Uso de `@ControllerAdvice` o `@RestControllerAdvice` para capturar errores y devolver respuestas JSON estandarizadas.
+- **Logs:** Uso de `SLF4J` (Logback). Prohibido `System.out.println`.

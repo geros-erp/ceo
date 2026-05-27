@@ -1,6 +1,11 @@
 import { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import * as FiIcons from 'react-icons/fi'
+import * as LuIcons from 'react-icons/lu'
+
+// Combinamos ambos sets de iconos
+const Icons = { ...FiIcons, ...LuIcons };
 
 function MenuNode({ item, level = 0 }) {
   const [open, setOpen] = useState(true)
@@ -8,6 +13,35 @@ function MenuNode({ item, level = 0 }) {
   const location = useLocation()
   const hasChildren = item.children?.length > 0
   const isActive = item.path && location.pathname === item.path
+
+  // Normalización robusta de nombres de iconos
+  const getIconComponent = (iconName) => {
+    if (!iconName) return Icons['FiCircle'];
+
+    // 1. Limpiar espacios y nombres comunes de clases (ej: "fi fi-users" -> "users")
+    let cleanName = iconName.split(' ').pop().replace(/^fi-/, '');
+
+    // 2. Convertir kebab-case o snake_case a PascalCase (ej: "shopping-cart" -> "ShoppingCart")
+    const pascalName = cleanName
+      .replace(/[-_ ]+(.)/g, (_, c) => c.toUpperCase())
+      .replace(/^(.)/, (c) => c.toUpperCase());
+
+    // 3. Intentar encontrar con el nombre exacto (PascalCase)
+    const exactMatch = Icons[pascalName];
+    if (exactMatch) return exactMatch;
+
+    // 4. Intentar con prefijos Fi (Feather) o Lu (Lucide)
+    const prefixes = ['Fi', 'Lu'];
+    for (const pref of prefixes) {
+      const prefixed = pascalName.startsWith(pref) ? pascalName : `${pref}${pascalName}`;
+      if (Icons[prefixed]) return Icons[prefixed];
+    }
+
+    console.warn(`⚠️ Icono no encontrado en react-icons (Fi/Lu): "${iconName}"`);
+    return Icons['FiCircle']; // Icono por defecto para no dejar el espacio vacío
+  };
+
+  const IconComponent = getIconComponent(item.icon);
 
   const handleClick = () => {
     if (hasChildren) setOpen(o => !o)
@@ -23,7 +57,7 @@ function MenuNode({ item, level = 0 }) {
           ${isActive ? 'bg-indigo-600 text-white' : 'text-indigo-200 hover:bg-white/10 hover:text-white'}
           ${hasChildren ? 'font-semibold text-indigo-300' : ''}`}
       >
-        {item.icon && <span className="text-base shrink-0">{item.icon}</span>}
+        {IconComponent && <IconComponent className="w-5 h-5 shrink-0" />}
         <span className="flex-1">{item.label}</span>
         {hasChildren && <span className="text-xs text-indigo-400">{open ? '▾' : '▸'}</span>}
       </div>

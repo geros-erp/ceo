@@ -4,6 +4,7 @@ import com.geros.backend.security.OutputSanitizationService;
 import com.geros.backend.trace.TransactionContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -34,6 +35,15 @@ public class GlobalExceptionHandler {
         
         return ResponseEntity.status(status).body(Map.of(
                 "message", msg,
+                "transactionId", transactionId
+        ));
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<Map<String, String>> handleAccessDenied(AccessDeniedException ex) {
+        String transactionId = currentTransactionId();
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of(
+                "message", "Su perfil no cuenta con permisos para esta acción",
                 "transactionId", transactionId
         ));
     }

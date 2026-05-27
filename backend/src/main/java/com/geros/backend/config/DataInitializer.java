@@ -115,31 +115,31 @@ public class DataInitializer implements CommandLineRunner {
     private void initMenu(Role adminRole) {
         if (menuItemRepository.count() > 0) return;
 
-        MenuItem inicio = saveItem("Inicio", "/dashboard", "🏠", 0, null);
+        MenuItem inicio = saveItem("Inicio", "/dashboard", "home", 0, null);
         grantAdmin(inicio, adminRole);
 
-        MenuItem usuarios = saveItem("Usuarios", "/users", "👥", 1, null);
+        MenuItem usuarios = saveItem("Usuarios", "/users", "users", 1, null);
         grantAdmin(usuarios, adminRole);
 
-        MenuItem seguridad = saveItem("Seguridad", null, "🔒", 2, null);
+        MenuItem seguridad = saveItem("Seguridad", null, "shield", 2, null);
         grantAdmin(seguridad, adminRole);
 
-        MenuItem roles = saveItem("Roles", "/roles", "🏷️", 1, seguridad);
-        MenuItem politica = saveItem("Politica de Contrasenas", "/policy", "🔑", 2, seguridad);
-        MenuItem historial = saveItem("Historial de Contrasenas", "/password-history", "📋", 3, seguridad);
-        MenuItem reservados = saveItem("Control de Identidades", "/reserved-usernames", "🚫", 4, seguridad);
+        MenuItem roles = saveItem("Roles", "/roles", "shield", 1, seguridad);
+        MenuItem politica = saveItem("Politica de Contrasenas", "/policy", "lock", 2, seguridad);
+        MenuItem historial = saveItem("Historial de Contrasenas", "/password-history", "list", 3, seguridad);
+        MenuItem reservados = saveItem("Control de Identidades", "/reserved-usernames", "user-x", 4, seguridad);
         grantAdmin(roles, adminRole);
         grantAdmin(politica, adminRole);
         grantAdmin(historial, adminRole);
         grantAdmin(reservados, adminRole);
 
-        MenuItem config = saveItem("Configuracion", null, "⚙️", 3, null);
+        MenuItem config = saveItem("Configuracion", null, "settings", 3, null);
         grantAdmin(config, adminRole);
 
-        MenuItem correo = saveItem("Correo SMTP", "/mail-config", "✉️", 1, config);
-        MenuItem ad = saveItem("Directorio Activo", "/ad-config", "🖥️", 2, config);
-        MenuItem menu = saveItem("Menu", "/menu-config", "📋", 3, config);
-        MenuItem secLog = saveItem("Log de Seguridad", "/security-log", "🛡️", 4, config);
+        MenuItem correo = saveItem("Correo SMTP", "/mail-config", "mail", 1, config);
+        MenuItem ad = saveItem("Directorio Activo", "/ad-config", "server", 2, config);
+        MenuItem menu = saveItem("Menu", "/menu-config", "list", 3, config);
+        MenuItem secLog = saveItem("Log de Seguridad", "/security-log", "activity", 4, config);
         grantAdmin(correo, adminRole);
         grantAdmin(ad, adminRole);
         grantAdmin(menu, adminRole);
