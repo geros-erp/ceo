@@ -75,7 +75,7 @@ export default function Login() {
             {loading ? 'Ingresando...' : 'Ingresar'}
           </button>
           <p className="text-center text-sm text-gray-500">
-            <Link to="/forgot-password" className="text-indigo-600 hover:underline">
+            <Link to="/forgot-password" disabled={loading} className="text-indigo-600 hover:underline">
               ¿Olvidaste tu contraseña?
             </Link>
           </p>

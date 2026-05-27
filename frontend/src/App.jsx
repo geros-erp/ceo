@@ -2,38 +2,33 @@ import { BrowserRouter, Routes, Route, Navigate, Link } from 'react-router-dom'
 import { AuthProvider, useAuth } from './context/AuthContext'
 import { useBlockBrowserHistory } from './hooks/useBlockBrowserHistory'
 import SessionTimeout from './components/SessionTimeout'
+
 // Auth
-import Login        from './pages/auth/Login'
-import ForgotPassword  from './pages/auth/ForgotPassword'
-import ResetPassword   from './pages/auth/ResetPassword'
-import ChangePassword from './pages/auth/ChangePassword'
-import ValidateSite    from './pages/auth/ValidateSite'
+import { Login, ForgotPassword, ResetPassword, ChangePassword, ValidateSite} from './pages/auth'
 
 // Dashboard
-import DashboardHome from './pages/dashboard/DashboardHome'
+import { DashboardHome } from './pages/dashboard'
 
 // Users
-import Users        from './pages/users/Users'
+import { Users } from './pages/users'
 
 // Roles
-import Roles        from './pages/roles/Roles'
+import { Roles } from './pages/roles'
 
 // Security
-import PasswordPolicy from './pages/security/PasswordPolicy'
-import PasswordHistory from './pages/security/PasswordHistory'
-import ReservedUsernames from './pages/security/ReservedUsernames'
-import SecurityLog     from './pages/security/SecurityLog'
+import { PasswordPolicy, PasswordHistory, ReservedUsernames, SecurityLog } from './pages/security'
 
-// Config
-import AdConfig     from './pages/config/AdConfig'
-import MailConfig   from './pages/config/MailConfig'
-import MenuConfig      from './pages/config/MenuConfig'
+// Config (Consolidado)
+import { AdConfig, MailConfig, MenuConfig, UnitList } from './pages/config'
 
-// Contracts & Projects
-import ContractList    from './pages/contracts/ContractList'
-import ContractForm    from './pages/contracts/ContractForm'
-import ProjectList     from './pages/projects/ProjectList'
-import ProjectForm     from './pages/projects/ProjectForm'
+// Contracts
+import { ContractList, ContractForm } from './pages/contracts'
+
+// Projects
+import { ProjectList, ProjectForm } from './pages/projects'
+
+// Inventory
+import { ProductList } from './pages/inventory'
 function Unauthorized() {
   const { defaultPath } = useAuth()
 
@@ -57,7 +52,7 @@ function Unauthorized() {
 
 function PrivateRoute({ children, path }) {
   const { user, authzLoading, hasPathAccess, defaultPath } = useAuth()
-  
+
   // Bloquear navegación histórica en rutas autenticadas
   useBlockBrowserHistory()
 
@@ -95,11 +90,15 @@ export default function App() {
           <Route path="/contracts"       element={<PrivateRoute path="/contracts"><ContractList /></PrivateRoute>} />
           <Route path="/contracts/new"   element={<PrivateRoute path="/contracts"><ContractForm /></PrivateRoute>} />
           <Route path="/contracts/:id"   element={<PrivateRoute path="/contracts"><ContractForm /></PrivateRoute>} />
-          
+
           <Route path="/contracts/:contractId/projects"        element={<PrivateRoute path="/contracts"><ProjectList /></PrivateRoute>} />
           <Route path="/contracts/:contractId/projects/new"    element={<PrivateRoute path="/contracts"><ProjectForm /></PrivateRoute>} />
           <Route path="/contracts/:contractId/projects/:id"    element={<PrivateRoute path="/contracts"><ProjectForm /></PrivateRoute>} />
-          
+
+          <Route path="/inventory/products"     element={<PrivateRoute path="/inventory/products"><ProductList /></PrivateRoute>} />
+
+          <Route path="/config/units"      element={<PrivateRoute path="/config/units"><UnitList /></PrivateRoute>} />
+
           <Route path="*"                element={<Navigate to="/login" replace />} />
         </Routes>
       </BrowserRouter>

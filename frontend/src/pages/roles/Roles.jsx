@@ -291,7 +291,7 @@ export default function Roles() {
                           <div className="flex gap-1">
                             <button onClick={() => openUsersQuery(role)} className="text-xs bg-sky-50 hover:bg-sky-100 text-sky-700 px-2 py-1 rounded">Usuarios</button>
                             <button onClick={() => openPermissionsQuery(role)} className="text-xs bg-emerald-50 hover:bg-emerald-100 text-emerald-700 px-2 py-1 rounded">Permisos</button>
-                            <button onClick={() => openEdit(role)} className="text-xs bg-indigo-50 hover:bg-indigo-100 text-indigo-600 px-2 py-1 rounded">Editar</button>
+                             <button onClick={() => openEdit(role)} className="text-xs bg-indigo-50 hover:bg-indigo-100 text-indigo-600 px-2 py-1 rounded">Editar</button>
                             <button onClick={() => handleDelete(role.id)} className="text-xs bg-red-50 hover:bg-red-100 text-red-600 px-2 py-1 rounded">Eliminar</button>
                           </div>
                         </td>

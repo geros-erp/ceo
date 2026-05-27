@@ -23,7 +23,7 @@ export default function DashboardHome() {
           getUsers({ page: 0, size: 100 }),
           getRoles()
         ])
-        
+
         const users = usersRes.data.content
         setStats({
           totalUsers: usersRes.data.totalElements,
@@ -42,7 +42,7 @@ export default function DashboardHome() {
   }, [])
 
   const StatCard = ({ title, value, icon, color, subtitle, onClick }) => (
-    <div 
+    <div
       className={`bg-white rounded-xl shadow-sm p-6 border-l-4 ${color} hover:shadow-md transition-shadow cursor-pointer`}
       onClick={onClick}
     >
@@ -190,8 +190,8 @@ export default function DashboardHome() {
               <div className="flex-1">
                 <h3 className="font-semibold text-amber-800">Contraseña próxima a expirar</h3>
                 <p className="text-sm text-amber-700 mt-1">
-                  Tu contraseña expira en {user.passwordExpiresInDays} día{user.passwordExpiresInDays !== 1 ? 's' : ''}. 
-                  <button 
+                  Tu contraseña expira en {user.passwordExpiresInDays} día{user.passwordExpiresInDays !== 1 ? 's' : ''}.
+                  <button
                     onClick={() => navigate('/change-password')}
                     className="ml-2 underline font-medium hover:text-amber-900"
                   >
